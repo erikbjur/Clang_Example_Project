@@ -4,7 +4,7 @@
 		{
 			// This task compiles and links, aka "Builds" our app in one shot
 			"type": "cppbuild",
-			"label": "Build App Using Clang",
+			"label": "Windows - Build App Using Clang",
 			"command": "C:/Program Files/LLVM/bin/clang++.exe",
 			"args": [
 				//"-fcolor-diagnostics",	//controls whether or not Clang prints diagnostics in color
@@ -31,12 +31,12 @@
 		// We will end up with a bunch of .o files (object files) in the temp directory
 		{
 			"type": "cppbuild",
-			"label": "Compile all .cpp files",
+			"label": "Windows - Compile all .cpp files",
 			"command": "C:/Program Files/LLVM/bin/clang++.exe",
 			"args": [
 				//"-fcolor-diagnostics",
 				//"-fansi-escape-codes",
-				//"-g",
+				"-g",
 				"-c",
 				"${workspaceFolder}\\*.cpp",
 			],
@@ -54,10 +54,9 @@
 
 
 
-
 		{
 			"type": "cppbuild",
-			"label": "Link all .o files into .exe",
+			"label": "Windows - Link all .o files into .exe",
 			"command": "C:/Program Files/LLVM/bin/clang++.exe",
 			"args": [
 				//"-fcolor-diagnostics",
@@ -80,10 +79,11 @@
 
 
 
+
 		// This task deletes all the build files like .o and .exe
 		{
             "type": "shell",
-            "label": "Clean Build Files",
+            "label": "Windows - Clean Build Files",
             "command": "del",
             "args": [
 				"/Q",	//You are not prompted for delete confirmation
@@ -91,6 +91,136 @@
 				"${workspaceFolder}\\build\\*.exe",		//executable files
 				"${workspaceFolder}\\build\\*.ilk",		//intermediary files created by the linker
 				"${workspaceFolder}\\build\\*.pdb"		//debug files for if you use the debugger
+            ]
+        },
+
+
+
+
+		{
+			// This task compiles and links, aka "Builds" our app in one shot
+			"type": "shell",
+			"label": "MacOS - Build App Using Clang",
+			"command": "clang++",
+			"args": [
+				//"-fcolor-diagnostics",	//controls whether or not Clang prints diagnostics in color
+				//"-fansi-escape-codes",	//Controls whether ANSI escape codes are used instead of the Windows Console API to output colored diagnostics
+				"-g",					//This make a debug build
+				"${workspaceFolder}/*.cpp",	//This means compile all files ending in ".cpp"
+				"-o",					//This indicates that the next line is our output file
+				"${workspaceFolder}/build/myapp.exe"	//This is the output file
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"	//This is where the command is started
+			},
+			"problemMatcher": [
+				{
+					"owner": "cpp",
+					"fileLocation": [
+						"relative",
+						"${workspaceRoot}"
+					],
+						"pattern": {
+						"regexp": "^(.):(\\d+):(\\d+):\\s+(warning|error):\\s+(.)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"severity": 4,
+						"message": 5
+					}
+				}
+			],
+			"group": "build",				//This groups the tasks into the "Build" group
+			"detail": "This task builds and links our program in one shot."
+		},
+
+
+
+
+		{
+			"type": "shell",
+			"label": "MacOS - Compile all .cpp files",
+			"command": "clang++",
+			"args": [
+				//"-fcolor-diagnostics",
+				//"-fansi-escape-codes",
+				"-g",
+				"-c",
+				"${workspaceFolder}/*.cpp",
+			],
+			"options": {
+				// This is where the .o files will go
+				"cwd": "${workspaceFolder}/build/temp/"
+			},
+			"problemMatcher": [
+				{
+					"owner": "cpp",
+					"fileLocation": [
+						"relative",
+						"${workspaceRoot}"
+					],
+						"pattern": {
+						"regexp": "^(.):(\\d+):(\\d+):\\s+(warning|error):\\s+(.)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"severity": 4,
+						"message": 5
+					}
+				}
+			],
+			"group": "build",
+			"detail": "This task only compiles our .cpp files\""
+		},
+
+
+
+		{
+			"type": "shell",
+			"label": "MacOS - Link all .o files into .exe",
+			"command": "clang++",
+			"args": [
+				//"-fcolor-diagnostics",
+				//"-fansi-escape-codes",
+				"${workspaceFolder}/build/temp/*.o",	//here's the object files we will link
+				"-g",	//debug version
+				"-o",	//output directory comes next
+				"${workspaceFolder}/build/myapp.exe"	//here's the output file name
+			],
+			"options": {
+				// This is where the .o files will go
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				{
+					"owner": "cpp",
+					"fileLocation": [
+						"relative",
+						"${workspaceRoot}"
+					],
+						"pattern": {
+						"regexp": "^(.):(\\d+):(\\d+):\\s+(warning|error):\\s+(.)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"severity": 4,
+						"message": 5
+					}
+				}
+			],
+			"group": "build",
+			"detail": "This task links all of our .o files into an executable\""
+		},
+
+
+
+		{
+            "type": "shell",
+            "label": "MacOS - Clean Build Files",
+            "command": "rm",
+            "args": [
+                "${workspaceFolder}/build/temp/*.o",	//object files
+				"${workspaceFolder}/build/*.exe"		//executable files
             ]
         }
 	]
